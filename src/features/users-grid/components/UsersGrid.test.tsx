@@ -4,13 +4,6 @@ import { render, screen } from '@testing-library/react';
 import { UsersGrid } from './UsersGrid';
 import type { UserProps } from '../types/users.types';
 
-vi.mock('../hooks/useUsersGrid', () => ({
-  useUsersApi: () => ({
-    users: mockUsers,
-    isLoading: false,
-  }),
-}));
-
 const mockUsers: UserProps[] = [
   {
     id: 1,
@@ -31,6 +24,12 @@ const mockUsers: UserProps[] = [
   },
 ];
 
+vi.mock('../hooks/useUsersGrid', () => ({
+  useUsersApi: () => ({
+    users: mockUsers,
+    isLoading: false,
+  }),
+}));
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: (props: any) => (

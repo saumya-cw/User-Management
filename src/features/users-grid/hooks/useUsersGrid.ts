@@ -9,12 +9,15 @@ export function useUsersApi() {
 
   useEffect(function () {
     let isMounted = true;
+    const abortController = new AbortController(); 
 
     async function fetchUsersOnMount() {
       setIsLoading(true);
 
       try {
-        const response = await axios.get<{ users: UserProps[] }>(`${USERS_API_BASE_URL}/users`);
+        const response = await axios.get<{ users: UserProps[] }>(`${USERS_API_BASE_URL}/users`, {
+          signal: abortController.signal, 
+        });
 
         if (isMounted) {
           const mappedUsers = response.data.users.map(function (user: UserProps) {
@@ -25,6 +28,10 @@ export function useUsersApi() {
           });
 
           setUsers(mappedUsers);
+        }
+      } catch (error) {
+        if (isMounted && !axios.isCancel(error)) {
+          console.error('Failed to load users', error);
         }
       } finally {
         if (isMounted) {
@@ -37,6 +44,7 @@ export function useUsersApi() {
 
     return function () {
       isMounted = false;
+      abortController.abort();
     };
   }, []);
 
