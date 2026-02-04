@@ -13,8 +13,10 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "ag-grid-community": "^35.0.1",
+    "ag-grid-enterprise": "^35.0.1",
     "ag-grid-react": "^35.0.1",
     "axios": "^1.13.4",
+    "clsx": "^2.1.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tailwindcss": "^4.1.18"
