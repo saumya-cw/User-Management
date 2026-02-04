@@ -3,11 +3,9 @@ import { UsersGrid } from './features/users-grid/components/UsersGrid';
 function App() {
 
   return (
-    <>
-      <div className="my-8">
-        <UsersGrid />
-      </div>
-    </>
+    <div className="flex flex-col gap-8 p-8">
+      <UsersGrid />
+    </div>
   );
 }
 

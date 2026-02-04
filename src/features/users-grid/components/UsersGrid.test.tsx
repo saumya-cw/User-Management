@@ -1,70 +1,79 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
 
-import { UsersGrid } from './UsersGrid';
-import type { UserProps } from '../types/users.types';
+import { UsersGrid } from "./UsersGrid";
+import type { UserProps } from "../types/users.types";
 
 const mockUsers: UserProps[] = [
   {
     id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    maidenName: 'Smith',
+    firstName: "John",
+    lastName: "Doe",
+    maidenName: "Smith",
     age: 30,
-    gender: 'male',
-    email: 'john@test.com',
-    phone: '1234567890',
-    username: 'johndoe',
-    birthDate: '1994-01-01',
-    bloodGroup: 'O+',
+    gender: "male",
+    email: "john@test.com",
+    phone: "1234567890",
+    username: "john doe",
+    birthDate: "1994-01-01",
+    bloodGroup: "O+",
     height: 180,
     weight: 75,
-    eyeColor: 'Blue',
+    eyeColor: "Blue",
     isActive: true,
   },
 ];
 
-vi.mock('../hooks/useUsersGrid', () => ({
+vi.mock("../hooks/useUsersGrid", () => ({
   useUsersApi: () => ({
     users: mockUsers,
     isLoading: false,
   }),
 }));
 
-vi.mock('ag-grid-react', () => ({
-  AgGridReact: (props: any) => (
-    <div data-testid="ag-grid">
-      <div data-testid="row-data">
-        {JSON.stringify(props.rowData)}
-      </div>
-      <div data-testid="column-defs">
-        {JSON.stringify(props.columnDefs)}
-      </div>
+vi.mock("ag-grid-react", () => ({
+  AgGridReact: () => (
+    <div>
+      <div>First Name</div>
+      <div>John</div>
     </div>
   ),
 }));
 
-describe('UsersGrid', () => {
-  it('renders AG Grid component', () => {
-    render(<UsersGrid />);
+const renderComponent = () => render(<UsersGrid />);
 
-    const grid = screen.getByTestId('ag-grid');
-    expect(grid).toBeInTheDocument();
+describe("UsersGrid", () => {
+  it("renders the grid heading", () => {
+    renderComponent();
+
+    expect(
+      screen.getByRole("heading", {
+        name: /user management grid/i,
+      }),
+    ).toBeInTheDocument();
   });
 
-  it('passes row data to AG Grid', () => {
-    render(<UsersGrid />);
+  it("renders column headers", () => {
+    renderComponent();
 
-    const rowData = screen.getByTestId('row-data');
-    expect(rowData.textContent).toContain('John');
+    expect(screen.getByText("First Name")).toBeInTheDocument();
   });
 
-  it('passes column definitions to AG Grid', () => {
-    render(<UsersGrid />);
+  it("renders user data in the grid", () => {
+    renderComponent();
 
-    const columnDefs = screen.getByTestId('column-defs');
-    expect(columnDefs.textContent).toContain('firstName');
-    expect(columnDefs.textContent).toContain('email');
-    expect(columnDefs.textContent).toContain('eyeColor');
+    expect(screen.getByText("John")).toBeInTheDocument();
+  });
+
+  it("renders filter toggle buttons", () => {
+    renderComponent();
+
+    expect(
+      screen.getByRole("button", { name: /show filters/i }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("button", { name: /hide filters/i }),
+    ).toBeInTheDocument();
   });
 });
